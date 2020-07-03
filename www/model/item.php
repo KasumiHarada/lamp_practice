@@ -17,10 +17,10 @@ function get_item($db, $item_id){
     FROM
       items
     WHERE
-      item_id = {$item_id}
+      item_id = ?
   ";
 
-  return fetch_query($db, $sql);
+  return fetch_query($db, $sql, array($item_id));
 }
 
 function get_items($db, $is_open = false){
@@ -88,10 +88,10 @@ function insert_item($db, $name, $price, $stock, $filename, $status){
         image,
         status
       )
-    VALUES('{$name}', {$price}, {$stock}, '{$filename}', {$status_value});
+    VALUES(?, ?, ?, ?, ?);
   ";
 
-  return execute_query($db, $sql);
+  return execute_query($db, $sql, array($name, $price, $stock, $filename, $status_value));
 }
 
 function update_item_status($db, $item_id, $status){
@@ -99,13 +99,13 @@ function update_item_status($db, $item_id, $status){
     UPDATE
       items
     SET
-      status = {$status}
+      status = ?
     WHERE
-      item_id = {$item_id}
+      item_id = ?
     LIMIT 1
   ";
   
-  return execute_query($db, $sql);
+  return execute_query($db, $sql, array($status, $item_id));
 }
 
 // 在庫数を変更する
@@ -145,11 +145,11 @@ function delete_item($db, $item_id){
     DELETE FROM
       items
     WHERE
-      item_id = {$item_id}
+      item_id = ?
     LIMIT 1
   ";
   
-  return execute_query($db, $sql);
+  return execute_query($db, $sql, array($item_id));
 }
 
 
