@@ -32,6 +32,4 @@ if(destroy_item($db, $item_id) === true){
   set_error('商品削除に失敗しました。');
 }
 
-
-
 redirect_to(ADMIN_URL);

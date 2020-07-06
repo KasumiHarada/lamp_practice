@@ -38,5 +38,4 @@ if($changes_to === 'open'){
   set_error('不正なリクエストです。');
 }
 
-
 redirect_to(ADMIN_URL);

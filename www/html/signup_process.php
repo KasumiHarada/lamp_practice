@@ -20,7 +20,7 @@ $password_confirmation = get_post('password_confirmation');
 // DB接続
 $db = get_db_connect();
 
-// 新規ユーザー登録
+// 新規ユーザー登録　password_hash($password, PASSWORD_DEFAULT)
 try{
   $result = regist_user($db, $name, $password, $password_confirmation);
   if( $result=== false){
