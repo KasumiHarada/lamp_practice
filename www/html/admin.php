@@ -6,10 +6,17 @@ require_once MODEL_PATH . 'item.php';
 
 session_start();
 
+// iframeを禁止
+header('X-FRAME-OPTIONS: DENY');
+
 // ログインしていなかったら、login画面へリダイレクト
 if(is_logined() === false){
   redirect_to(LOGIN_URL);
 }
+
+// $tokenを生成し、sessionに格納
+$token = get_random_string(30);
+$_SESSION['token'] = $token;
 
 // DBに接続する
 $db = get_db_connect();

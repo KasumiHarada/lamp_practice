@@ -25,11 +25,22 @@ if(is_admin($user) === false){
 // post送信されたitem_idを変数に格納
 $item_id = get_post('item_id');
 
-// 商品をDBから削除する
-if(destroy_item($db, $item_id) === true){
-  set_message('商品を削除しました。');
-} else {
-  set_error('商品削除に失敗しました。');
+// sessionのtokenとpost（hidden）送信されたtokenを比較して問題なければ処理を続ける
+if (isset($_POST['token']) && $_POST['token'] === $_SESSION['token']){
+  
+  // 商品をDBから削除する
+  if(destroy_item($db, $item_id) === true){
+    set_message('商品を削除しました。');
+  } else {
+    set_error('商品削除に失敗しました。');
+  }
+
+} else if ($_POST['token'] !== $_SESSION['token']){
+
+  // 不正な処理が行われたからsession情報消去
+  redirect_to(LOGIN_URL);
+  $_SESSION = array();
+  print '不正なアクセス';
 }
 
 redirect_to(ADMIN_URL);

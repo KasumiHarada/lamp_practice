@@ -7,10 +7,17 @@ require_once MODEL_PATH . 'cart.php';
 
 session_start();
 
+// iframeを禁止
+header('X-FRAME-OPTIONS: DENY');
+
 // ログイン済みか確認し、falseならloginページへリダイレクト
 if(is_logined() === false){
   redirect_to(LOGIN_URL);
 }
+
+// $tokenを生成し、sessionに格納
+$token = get_random_string(30);
+$_SESSION['token'] = $token;
 
 // DB接続
 $db = get_db_connect();
