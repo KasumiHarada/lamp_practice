@@ -30,12 +30,22 @@ $stock = get_post('stock');
 
 $image = get_file('image');
 
-// 商品を登録する
-if(regist_item($db, $name, $price, $stock, $status, $image)){
-  set_message('商品を登録しました。');
-}else {
-  set_error('商品の登録に失敗しました。');
-}
 
+// sessionのtokenとpost（hidden）送信されたtokenを比較して問題なければ処理を続ける
+if (isset($_POST['token']) && $_POST['token'] === $_SESSION['token']){
+  
+  // 商品を登録する
+  if(regist_item($db, $name, $price, $stock, $status, $image)){
+    set_message('商品を登録しました。');
+  }else {
+    set_error('商品の登録に失敗しました。');
+  }
+
+} else if ($_POST['token'] !== $_SESSION['token']){
+  // 不正な処理が行われたからsession情報消去
+  redirect_to(LOGIN_URL);
+  $_SESSION = array();
+  print '不正なアクセス';
+}
 
 redirect_to(ADMIN_URL);

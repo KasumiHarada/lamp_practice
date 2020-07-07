@@ -94,6 +94,7 @@ function insert_item($db, $name, $price, $stock, $filename, $status){
   return execute_query($db, $sql, array($name, $price, $stock, $filename, $status_value));
 }
 
+// item_idに一致する商品のステータスを変更する
 function update_item_status($db, $item_id, $status){
   $sql = "
     UPDATE

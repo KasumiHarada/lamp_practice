@@ -20,18 +20,29 @@ $password_confirmation = get_post('password_confirmation');
 // DB接続
 $db = get_db_connect();
 
-// 新規ユーザー登録
-try{
-  $result = regist_user($db, $name, $password, $password_confirmation);
-  if( $result=== false){
+// sessionのtokenとpost（hidden）送信されたtokenを比較して問題なければ処理を続ける
+if ($_POST['token'] && $_POST['token'] === $_SESSION['token']){
+
+  // 新規ユーザー登録　password_hash($password, PASSWORD_DEFAULT)
+  try{
+    $result = regist_user($db, $name, $password, $password_confirmation);
+    if( $result=== false){
+      set_error('ユーザー登録に失敗しました。');
+      redirect_to(SIGNUP_URL);
+    }
+  }catch(PDOException $e){
     set_error('ユーザー登録に失敗しました。');
     redirect_to(SIGNUP_URL);
   }
-}catch(PDOException $e){
-  set_error('ユーザー登録に失敗しました。');
-  redirect_to(SIGNUP_URL);
+
+  set_message('ユーザー登録が完了しました。');
+  login_as($db, $name, $password);
+
+} else if($_POST['token'] !== $_SESSION['token']){
+  // 不正な処理が行われたからsession情報消去
+  redirect_to(LOGIN_URL);
+  $_SESSION = array();
+  print '不正なアクセス';
 }
 
-set_message('ユーザー登録が完了しました。');
-login_as($db, $name, $password);
 redirect_to(HOME_URL);

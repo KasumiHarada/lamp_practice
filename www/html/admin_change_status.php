@@ -27,16 +27,25 @@ $item_id = get_post('item_id');
 // hidden送信された値を変数に格納（close or open）
 $changes_to = get_post('changes_to');
 
-// ステータスの変更処理
-if($changes_to === 'open'){
-  update_item_status($db, $item_id, ITEM_STATUS_OPEN);
-  set_message('ステータスを変更しました。');
-}else if($changes_to === 'close'){
-  update_item_status($db, $item_id, ITEM_STATUS_CLOSE);
-  set_message('ステータスを変更しました。');
-}else {
-  set_error('不正なリクエストです。');
-}
+// sessionのtokenとpost（hidden）送信されたtokenを比較して問題なければ処理を続ける
+if (isset($_POST['token']) && $_POST['token'] === $_SESSION['token']){
 
+  // ステータスの変更処理
+  if($changes_to === 'open'){
+    update_item_status($db, $item_id, ITEM_STATUS_OPEN);
+    set_message('ステータスを変更しました。');
+  }else if($changes_to === 'close'){
+    update_item_status($db, $item_id, ITEM_STATUS_CLOSE);
+    set_message('ステータスを変更しました。');
+  }else {
+    set_error('不正なリクエストです。');
+  }
+
+} else if ($_POST['token'] !== $_SESSION['token']){
+  // 不正な処理が行われたからsession情報消去
+  redirect_to(LOGIN_URL);
+  $_SESSION = array();
+  print '不正なアクセス';
+}
 
 redirect_to(ADMIN_URL);

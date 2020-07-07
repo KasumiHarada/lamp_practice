@@ -96,6 +96,7 @@ function get_upload_filename($file){
   return get_random_string() . '.' . $ext;
 }
 
+// CSRF対策。ランダム文字列を取得
 function get_random_string($length = 20){
   return substr(base_convert(hash('sha256', uniqid()), 16, 36), 0, $length);
 }
@@ -112,8 +113,6 @@ function delete_image($filename){
   return false;
   
 }
-
-
 
 function is_valid_length($string, $minimum_length, $maximum_length = PHP_INT_MAX){
   $length = mb_strlen($string);

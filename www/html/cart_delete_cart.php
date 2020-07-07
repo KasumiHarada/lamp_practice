@@ -20,11 +20,20 @@ $user = get_login_user($db);
 // hidden送信されたcart_idを変数に格納する
 $cart_id = get_post('cart_id');
 
-// cart_idに一致する商品をカートから削除する
-if(delete_cart($db, $cart_id)){
-  set_message('カートを削除しました。');
-} else {
-  set_error('カートの削除に失敗しました。');
+// sessionのtokenとpost（hidden）送信されたtokenを比較して問題なければ処理を続ける
+if ($_POST['token'] && $_POST['token'] === $_SESSION['token']){
+
+  // cart_idに一致する商品をカートから削除する
+  if(delete_cart($db, $cart_id)){
+    set_message('カートを削除しました。');
+  } else {
+    set_error('カートの削除に失敗しました。');
+  }
+} else if ($_POST['token'] !== $_SESSION['token']){
+  // 不正な処理が行われたからsession情報消去
+  redirect_to(LOGIN_URL);
+  $_SESSION = array();
+  print '不正なアクセス';
 }
 
 redirect_to(CART_URL);
