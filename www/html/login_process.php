@@ -19,8 +19,13 @@ $password = get_post('password');
 $db = get_db_connect();
 
 // sessionのtokenとpost（hidden）送信されたtokenを比較して問題なければ処理を続ける
-if (isset($_POST['token']) && $_POST['token'] === $_SESSION['token']){
-  
+if (isset($_POST['token']) ===false && $_POST['token'] !== $_SESSION['token']){
+  // 不正な処理が行われたからsession情報消去
+  redirect_to(LOGIN_URL);
+  $_SESSION = array();
+  exit;
+
+} else {  
   // nameに一致するユーザー情報をひとつ取得する→ユーザーが存在しなければ、エラー表示してlogiｎページへリダイレクト
   $user = login_as($db, $name, $password);
   if( $user === false){
@@ -34,11 +39,6 @@ if (isset($_POST['token']) && $_POST['token'] === $_SESSION['token']){
     redirect_to(ADMIN_URL);
   }
   
-} else if ($_POST['token'] !== $_SESSION['token']){
-  // 不正な処理が行われたからsession情報消去
-  redirect_to(LOGIN_URL);
-  $_SESSION = array();
-  print '不正なアクセス';
-}
+} 
 
 redirect_to(HOME_URL);
