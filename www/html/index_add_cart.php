@@ -21,8 +21,13 @@ $user = get_login_user($db);
 $item_id = get_post('item_id');
 
 // sessionのtokenとpost（hidden）送信されたtokenを比較して問題なければ処理を続ける
-if (isset($_POST['token']) && $_POST['token'] === $_SESSION['token']) {
+if (isset($_POST['token']) ===false && $_POST['token'] !== $_SESSION['token']) {
+  // 不正な処理が行われたからsession情報消去
+  redirect_to(LOGIN_URL);
+  $_SESSION = array();
+  print '不正なアクセス';
   
+} else {
   // 商品を追加する（追加or更新）
   if(add_cart($db,$user['user_id'], $item_id)){
     set_message('カートに商品を追加しました。');
@@ -30,11 +35,6 @@ if (isset($_POST['token']) && $_POST['token'] === $_SESSION['token']) {
     set_error('カートの更新に失敗しました。');
   }
 
-} else if ($_SESSION['token'] !== $_POST['token']){
-  // 不正な処理が行われたからsession情報消去
-  redirect_to(LOGIN_URL);
-  $_SESSION = array();
-  print '不正なアクセス';
-}
+} 
 
 redirect_to(HOME_URL);

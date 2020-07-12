@@ -26,8 +26,13 @@ if(is_admin($user) === false){
 $item_id = get_post('item_id');
 
 // sessionのtokenとpost（hidden）送信されたtokenを比較して問題なければ処理を続ける
-if (isset($_POST['token']) && $_POST['token'] === $_SESSION['token']){
-  
+if (isset($_POST['token'])===false && $_POST['token'] !== $_SESSION['token']){
+  // 不正な処理が行われたからsession情報消去
+  redirect_to(LOGIN_URL);
+  $_SESSION = array();
+  exit;
+
+} else {
   // 商品をDBから削除する
   if(destroy_item($db, $item_id) === true){
     set_message('商品を削除しました。');
@@ -35,12 +40,6 @@ if (isset($_POST['token']) && $_POST['token'] === $_SESSION['token']){
     set_error('商品削除に失敗しました。');
   }
 
-} else if ($_POST['token'] !== $_SESSION['token']){
-
-  // 不正な処理が行われたからsession情報消去
-  redirect_to(LOGIN_URL);
-  $_SESSION = array();
-  print '不正なアクセス';
-}
+} 
 
 redirect_to(ADMIN_URL);

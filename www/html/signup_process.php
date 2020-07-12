@@ -21,10 +21,16 @@ $password_confirmation = get_post('password_confirmation');
 $db = get_db_connect();
 
 // sessionのtokenとpost（hidden）送信されたtokenを比較して問題なければ処理を続ける
-if ($_POST['token'] && $_POST['token'] === $_SESSION['token']){
+if (isset($_POST['token']) ===false && $_POST['token'] !== $_SESSION['token']){
+  // 不正な処理が行われたからsession情報消去
+  redirect_to(LOGIN_URL);
+  $_SESSION = array();
+  exit;
 
+} else {
   // 新規ユーザー登録　password_hash($password, PASSWORD_DEFAULT)
   try{
+    
     $result = regist_user($db, $name, $password, $password_confirmation);
     if( $result=== false){
       set_error('ユーザー登録に失敗しました。');
@@ -38,11 +44,6 @@ if ($_POST['token'] && $_POST['token'] === $_SESSION['token']){
   set_message('ユーザー登録が完了しました。');
   login_as($db, $name, $password);
 
-} else if($_POST['token'] !== $_SESSION['token']){
-  // 不正な処理が行われたからsession情報消去
-  redirect_to(LOGIN_URL);
-  $_SESSION = array();
-  print '不正なアクセス';
-}
+} 
 
 redirect_to(HOME_URL);

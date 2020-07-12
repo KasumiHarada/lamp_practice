@@ -48,7 +48,7 @@ function login_as($db, $name, $password){
   return $user;
 }
 
-// login済みのユーザーIDをセッションから取得して返す
+// login済みのユーザーIDとパスワードをセッションから取得して返す
 function get_login_user($db){
   $login_user_id = get_session('user_id');
 

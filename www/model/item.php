@@ -153,7 +153,6 @@ function delete_item($db, $item_id){
   return execute_query($db, $sql, array($item_id));
 }
 
-
 // 非DB
 
 // 
