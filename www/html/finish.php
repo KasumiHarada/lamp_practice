@@ -62,9 +62,10 @@ if (isset($_POST['token'])===false && $_POST['token'] !== $_SESSION['token']){
         $history_id = $db->lastInsertId('history_id');
         
         // purchase_detailテーブルを更新する
-        
         $sql='INSERT INTO purchase_detail (history_id, item_id, amount, price)VALUES(:history_id, :item_id, :amount, :price)';
+        
         $stmt=$db->prepare($sql);
+        
         $stmt->bindValue('history_id', $history_id, PDO::PARAM_INT);
         
         foreach($carts as $cart){
@@ -72,10 +73,10 @@ if (isset($_POST['token'])===false && $_POST['token'] !== $_SESSION['token']){
           $item_id= $cart['item_id'];
           $price  = $cart['price'];  
 
-            $stmt->bindValue('item_id', $item_id, PDO::PARAM_INT);
-            $stmt->bindValue('amount', $amount, PDO::PARAM_INT);
-            $stmt->bindValue('price', $price, PDO::PARAM_INT);
-            $stmt->execute();
+          $stmt->bindValue('item_id', $item_id, PDO::PARAM_INT);
+          $stmt->bindValue('amount', $amount, PDO::PARAM_INT);
+          $stmt->bindValue('price', $price, PDO::PARAM_INT);
+          $stmt->execute();
         }
         // コミット
         $db->commit(); 
@@ -87,10 +88,8 @@ if (isset($_POST['token'])===false && $_POST['token'] !== $_SESSION['token']){
         // 例外をスロー
         throw $e;
       }
-    
-    
+        
   }
-  
 }
 
 include_once '../view/finish_view.php';

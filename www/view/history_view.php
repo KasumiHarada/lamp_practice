@@ -24,9 +24,9 @@
       <tr>
         <td><?php print h($result['history_id']); ?></td>
         <td><?php print h($result['purchase_datetime']); ?></td>
-        <td><?php print h(number_format($result['sum(purchase_detail.price)'])); ?>円。ここが変</td>
+        <td><?php print h(number_format($result['total'])); ?>円</td>
         <td>
-          <form method ="POST" action ="purchase_detail.php">
+          <form method ="GET" action ="purchase_detail.php">
             <input type ="submit" value="詳細">
             <input type ="hidden" name="history_id" value="<?php print $result['history_id']; ?>">
           </form>

@@ -24,41 +24,26 @@ $user = get_login_user($db);
 // $userからuser_id だけを取得する
 $user_id = $user['user_id'];
 
-// adminでなければ、
 try{
-    $sql ='SELECT 
+    $where ='';
+    $array=array();
+    if ($user_id !==4){
+      $where =' where user_id = ? ';
+      $array[]=$user_id;
+    }
+    $sql ="SELECT 
       history.history_id,
       history.purchase_datetime,
-      sum(purchase_detail.price) 
+      sum(purchase_detail.price*purchase_detail.amount) as total
     FROM 
       history LEFT OUTER JOIN purchase_detail ON history.history_id = purchase_detail.history_id
-    WHERE 
-      user_id =:user_id
-    GROUP BY history_id DESC;';
+      {$where}
+    GROUP BY history_id DESC;";
     
-    // // 計算せずにデータだけ取り出す場合→history_id がダブってる
-    // $sql ='SELECT 
-    //         history.history_id,
-    //         history.purchase_datetime,
-    //         purchase_detail.price,
-    //         purchase_detail.amount
-    //       FROM 
-    //         history LEFT OUTER JOIN purchase_detail ON history.history_id = purchase_detail.history_id
-    //       WHERE 
-    //         user_id =:user_id';
-
-    $stmt=$db->prepare($sql);
-
-    $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-
-    $stmt->execute();
-
-    $results = $stmt->fetchAll();
+    $results=fetch_all_query($db, $sql, $array);
 
 } catch (PDOException $e){
     print '購入履歴を表示できない'. $e->getMessage();
 }
-
-// adminだったら全部表示
 
 include_once '../view/history_view.php';
