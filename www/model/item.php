@@ -38,8 +38,66 @@ function get_items($db, $is_open = false){
   if($is_open === true){
     $sql .= '
       WHERE status = 1
+      ORDER BY created DESC
     ';
   }
+  return fetch_all_query($db, $sql);
+}
+
+// 商品をソートして表示する（新着・安い順・高い順）
+function get_items_sort($db, $is_open = false){
+  $order_by ='';
+  $array=array();
+  if ($_SESSION['sort'] ==='higher'){
+      $order_by ='ORDER BY price DESC';
+
+  } else if ($_SESSION['sort'] ==='lower'){
+      $order_by ='ORDER BY price';
+
+  } else {
+      $order_by ='ORDER BY created DESC';
+  }  
+
+  $sql = "
+      SELECT
+      item_id, 
+      name,
+      stock,
+      price,
+      image,
+      status
+      FROM
+      items
+      {$order_by}
+      ";
+      if($is_open === true){
+          $sql .= "
+          WHERE status = 1
+          ";
+      }
+      
+  return fetch_all_query($db, $sql);
+}
+
+
+// 人気ランキングの上位3品を取得する
+function get_items_popular($db){
+  $sql='
+    SELECT
+      items.item_id, 
+      items.name,
+      items.stock,
+      items.price,
+      items.image,
+      items.status,
+      sum(purchase_detail.amount) as amount
+    FROM
+      items LEFT OUTER JOIN purchase_detail ON items.item_id = purchase_detail.item_id
+    WHERE status =1
+    GROUP BY item_id
+    ORDER BY amount DESC
+    LIMIT 3
+  ';
 
   return fetch_all_query($db, $sql);
 }

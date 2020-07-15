@@ -15,8 +15,6 @@
 <p><?php print h($total['purchase_datetime']); ?></p>
 <p><?php print h(number_format($total['total'])); ?>円</p>
 
-
-
 <table class="table table-bordered">
   <thead class="thead-light">
     <tr>
@@ -27,12 +25,12 @@
     </tr>
   </thead>
   <tbody>
-    <?php foreach ($results as $result){ ?>
+    <?php foreach ($subtotal as $value){ ?>
     <tr>
-      <td><?php print h($result['name']); ?></td>
-      <td><?php print h(number_format($result['price'])); ?>円</td>
-      <td><?php print h($result['amount']); ?></td>
-      <td><?php print h(number_format($result['price']*$result['amount']));?>円</td>
+      <td><?php print h($value['name']); ?></td>
+      <td><?php print h(number_format($value['price'])); ?>円</td>
+      <td><?php print h($value['amount']); ?></td>
+      <td><?php print h(number_format($value['total']));?>円</td>
     </tr>
     <?php } ?>
   </tbody>  

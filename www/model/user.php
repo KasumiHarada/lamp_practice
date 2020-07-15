@@ -109,13 +109,16 @@ function is_valid_password($password, $password_confirmation){
 }
 
 // ユーザー情報をDBに登録する
-function insert_user($db, $name, $password){
+function insert_user($db, $name, $hash){
+  
+
   $sql = "
     INSERT INTO
       users(name, password)
     VALUES ( ?, ?);
   ";
-
-  return execute_query($db, $sql, array($name, $password));
+ 
+  return execute_query($db, $sql, array($name, $hash));
 }
+
 

@@ -17,6 +17,16 @@ $password = get_post('password');
 // post送信されたpassword(確認用)を変数に格納する
 $password_confirmation = get_post('password_confirmation');
 
+// // パスワードをハッシュ化する
+// $hash = password_hash($password, PASSWORD_DEFAULT);
+// $hash_confirmation = password_hash($password_confirmation, PASSWORD_DEFAULT);
+
+// // post送信されたpasswordを変数に格納する
+// $password = $hash;
+// // post送信されたpassword(確認用)を変数に格納する
+// $password_confirmation = $hash_confirmation;
+
+
 // DB接続
 $db = get_db_connect();
 
