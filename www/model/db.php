@@ -40,7 +40,7 @@ function fetch_all_query($db, $sql, $params = array()){
   return false;
 }
 
-// update文を実行する
+// sql文を実行する
 function execute_query($db, $sql, $params = array()){
   try{
     $statement = $db->prepare($sql);

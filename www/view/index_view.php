@@ -11,9 +11,19 @@
   
 
   <div class="container">
-    <h1>商品一覧</h1>
-    <?php include VIEW_PATH . 'templates/messages.php'; ?>
-
+  <div class="float-right">
+    <form method="GET" action ="index.php">
+      <select name="sort">
+        <option value="new" <?php if ($_SESSION['sort']=== 'new'){print 'selected';}?>>新着順</option>
+        <option value="lower"<?php if ($_SESSION['sort']=== 'lower'){print 'selected';}?>>価格の安い順</option>
+        <option value="higher"<?php if ($_SESSION['sort']=== 'higher'){print 'selected';}?>>価格の高い順</option>
+      </select>
+      <input type="submit" name="sort_button" value="並べ替え">
+    </form>
+  </div>
+  <h1>商品一覧</h1>
+  <?php include VIEW_PATH . 'templates/messages.php'; ?>
+   
     <div class="card-deck">
       <div class="row">
       <?php foreach($items as $item){ ?>
@@ -42,6 +52,37 @@
       <?php } ?>
       </div>
     </div>
+      
+    <div class ="popular_line">
+    <h1>人気ランキング</h1>
+    <div class="row">
+      <?php foreach($popular_lines as $line){ ?>
+        <div class="col-6 item">
+          <div class="card h-100 text-center">
+            <div class="card-header">
+              <?php print h($line['name']); ?>
+            </div>
+            <figure class="card-body">
+              <img class="card-img" src="<?php print h(IMAGE_PATH . $line['image']); ?>">
+              <figcaption>
+                <?php print h(number_format($line['price'])); ?>円
+                <?php if($line['stock'] > 0){ ?>
+                  <form action="index_add_cart.php" method="post">
+                    <input type="submit" value="カートに追加" class="btn btn-primary btn-block">
+                    <input type="hidden" name="item_id" value="<?php print($line['item_id']); ?>">
+                    <input type="hidden" name="token" value="<?php print $_SESSION['token'];?>">
+                  </form>
+                <?php } else { ?>
+                  <p class="text-danger">現在売り切れです。</p>
+                <?php } ?>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      <?php } ?>
+      </div>
+    </div>
+
   </div>
   
 </body>

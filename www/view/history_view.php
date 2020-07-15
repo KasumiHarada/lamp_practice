@@ -27,7 +27,7 @@
         <td><?php print h(number_format($result['total'])); ?>円</td>
         <td>
           <form method ="GET" action ="purchase_detail.php">
-            <input type ="submit" value="詳細">
+            <input type ="submit" class="btn-link" value="詳細">
             <input type ="hidden" name="history_id" value="<?php print $result['history_id']; ?>">
           </form>
         </td>

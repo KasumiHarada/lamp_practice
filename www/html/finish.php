@@ -26,8 +26,6 @@ $carts = get_user_carts($db, $user['user_id']);
 // カートの商品の合計金額を計算する
 $total_price = sum_carts($carts);
 
-
-
 // sessionのtokenとpost（hidden）送信されたtokenを比較して問題なければ処理を続ける
 if (isset($_POST['token'])===false && $_POST['token'] !== $_SESSION['token']){
   // 不正な処理が行われたからsession情報消去
@@ -42,9 +40,6 @@ if (isset($_POST['token'])===false && $_POST['token'] !== $_SESSION['token']){
     redirect_to(CART_URL);
 
   } else {
-
-    
-    
 
       // トランザクションで、historyテーブルとpurchase_detailテーブルにinsertする  
       $db->beginTransaction();
